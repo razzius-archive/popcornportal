@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}{{project_name}} | {{thispage}}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{project_description}}">
+    <meta name="author" content="{% for author in founders %}{{ author.name }},{% endfor %}">
+
+    <!-- Le styles -->
+    <link href="/media/css/bootstrap.min.css" rel="stylesheet">
+    {% block styles %}
+      <link href="/media/css/style.css" rel="stylesheet">
+    {% endblock styles %}
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <!-- HP: edit this if you feel like it -->
+    <link rel="shortcut icon" href="/media/img/ico/favicon.ico">
+    <!-- HP: commented out because I was too lazy to generate them. -->
+
+    <!-- <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/media/img/ico/apple-touch-icon-144-precomposed.png"> -->
+    <!-- <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/media/img/ico/apple-touch-icon-114-precomposed.png"> -->
+    <!-- <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/media/img/ico/apple-touch-icon-72-precomposed.png"> -->
+    <!-- <link rel="apple-touch-icon-precomposed" href="/media/img/ico/apple-touch-icon-57-precomposed.png"> -->
+  </head>
+
+  <body>
+    <!-- HP: By executive fiat, I hereby declare it prohibited to use the navbar-inverse or navbar-fixed-top classes! -->
+    <div class="navbar navbar-static-top"> 
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">{{project_name}}</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              {% block nav %}
+                {% for page in pages %}
+                  {% if page.name == thispage %}
+                    <li class="active"><a href="{{page.url}}">{{page.name}}</a></li>
+                  {% else %}
+                    <li><a href="{{page.url}}">{{page.name}}</a></li>
+                  {% endif %}
+                {% endfor %}
+              {% endblock nav %}
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      {% block content %}
+      {% endblock content %}
+
+      
+
+      <footer>
+        <hr>
+        {% block footer %}
+          <center>
+            <p>&copy; {{project_name}} 2012</p>
+            <p>
+              A project by 
+              {% for author in founders %}
+                <a 
+                  href="{% if author.url %}{{ author.url }}{% else %}mailto:{{ author.email }}{% endif %}" 
+                  rel="popover" 
+                  data-placement="above" 
+                  title="{{ author.name }}"
+                  data-trigger="hover"
+                  data-content="
+                    <img src='{{ author.picture }}' style='max-width:100%;padding:10px;'/>
+                    <p>{{ author.blurb }}</p>
+                    <p>You can email me at {{ author.email }}</p>"
+                  >{{ author.name }}</a>
+              {% endfor %}
+            </p>
+          </center>
+        {% endblock footer %}
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/media/js/jquery.min.js"></script>
+    <script src="/media/js/bootstrap.js"></script>
+    <script>
+      $(function(){
+        var popover_options = {
+          'trigger':'hover', 
+          'html':'true',
+        };
+        $('footer center p a').popover(popover_options);  
+      });
+    </script>
+    {% block scripts %}
+    {% endblock scripts %}
+    <!-- HP: You should probably get a Google Analytics account for this immediately! -->
+    <!-- Change UA-XXXXX-X to be your site's ID -->
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-XXXXX-X']);
+      _gaq.push(['_setDomainName', 'XXXXXXXXXX']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
+  </body>
+</html>
