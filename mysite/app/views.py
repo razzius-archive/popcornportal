@@ -12,22 +12,22 @@ from app.forms import *
 import settings
 
 #HP everything else (these are usually useful)
-import os, sys, datetime, json 
-from bootstrap.forms import BootstrapModelForm, Fieldset
+import os, sys, datetime, json
+# from bootstrap.forms import BootstrapModelForm, Fieldset
 
-#HP: 
+#HP:
 def hackpackify(request, page_context):
   '''
     Updates a view's context to include variables expected in base.html
-    Intended to make boilerplate info conveyance and menu bars quick and easy. 
-    and returns a RequestContext of the resulting dict (which is usually better). 
+    Intended to make boilerplate info conveyance and menu bars quick and easy.
+    and returns a RequestContext of the resulting dict (which is usually better).
 
-    CHANGE EVERYTHING IN THIS! 
+    CHANGE EVERYTHING IN THIS!
   '''
   pages = [
-      #HP These pages will appear in the top bar. List does not have to be exhaustive. 
-      {'name':'Home', 'url':'/'}, 
-      {'name':'About', 'url':'/about/'}, 
+      #HP These pages will appear in the top bar. List does not have to be exhaustive.
+      {'name':'Home', 'url':'/'},
+      {'name':'About', 'url':'/about/'},
     ]
   project_name = "A Django HackPack Project"
   project_description = "A super cool app."
@@ -50,15 +50,15 @@ def hackpackify(request, page_context):
       'project_description': project_description,
       }
   context = dict(page_context, **global_context)
-  return RequestContext(request, context) #HP 
+  return RequestContext(request, context) #HP
 
 def index(request):
-  message = 'hello world!' #HP just used for example. Don't do this. 
+  message = 'hello world!' #HP just used for example. Don't do this.
   context = {
     'thispage': 'Home', #HP necessary to know which page we're on (for nav). Always spell the same as the 'Name' field in hackpackify()'s `pages` variable
     'message':message,
   }
-  return render_to_response('index.html', hackpackify(request, context)) 
+  return render_to_response('index.html', hackpackify(request, context))
 
 def about(request):
   context = {
