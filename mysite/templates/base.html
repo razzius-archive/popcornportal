@@ -5,7 +5,7 @@
     <title>{% block title %}{{hackpack.project_name}} | {{hackpack.thispage}}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{{project_description}}">
-    <meta name="author" content="{% for author in founders %}{{ author.name }},{% endfor %}">
+    <meta name="author" content="{% for founder in founders %}{{ founder.name }},{% endfor %}">
 
     <!-- Le styles -->
     <link href="/media/css/bootstrap.min.css" rel="stylesheet">
@@ -65,21 +65,19 @@
         <hr>
         {% block footer %}
           <center>
-            <p>&copy; {{hackpack.project_name}} 2012</p>
+            <p>&copy; {{hackpack.project_name}} {% now "Y" %}</p>
             <p>
               A project by 
-              {% for author in hackpack.founders %}
+              {% for founder in hackpack.founders %}
                 <a 
-                  href="{% if author.url %}{{ author.url }}{% else %}mailto:{{ author.email }}{% endif %}" 
+                  href="{% if founder.url %}{{ founder.url }}{% else %}mailto:{{ founder.email }}{% endif %}" 
                   rel="popover" 
-                  data-placement="above" 
-                  title="{{ author.name }}"
-                  data-trigger="hover"
+                  title="{{ founder.name }}"
                   data-content="
-                    <img src='{{ author.picture }}' style='max-width:100%;padding:10px;'/>
-                    <p>{{ author.blurb }}</p>
-                    <p>You can email me at {{ author.email }}</p>"
-                  >{{ author.name }}</a>
+                    <img src='{{ founder.picture }}' style='max-width:90%;padding:10px;'/>
+                    <p>{{ founder.blurb }}</p>
+                    <p>You can email me at {{ founder.email }}</p>"
+                  >{{ founder.name }}</a>
               {% endfor %}
             </p>
           </center>
@@ -98,6 +96,8 @@
         var popover_options = {
           'trigger':'hover', 
           'html':'true',
+          'placement':'top',
+          'offset':'10px',
         };
         $('footer center p a').popover(popover_options);  
       });

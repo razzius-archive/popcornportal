@@ -27,9 +27,11 @@
       <div class="span3">
         <div class="well">
           <h2><a href="{{founder.url}}">{{founder.name}}</a></h2>
-          <p>{{founder.blurb}}</p>
+          <p>{{founder.blurb|safe}}</p>
           <hr>
           <img class="thumbnail" src="{{founder.picture}}" style="max-width:90%; margin:auto;"/>
+          <hr>
+          {% if founder.email %}<p>You can contact me at {{founder.email}}</p>{% endif %}
         </div>
       </div>
     {% endfor %}
