@@ -16,7 +16,7 @@ import os, sys, datetime, json
 # from bootstrap.forms import BootstrapModelForm, Fieldset
 
 #HP:
-def hackpackify(request, page_context):
+def hackpackify(request, context):
   '''
     Updates a view's context to include variables expected in base.html
     Intended to make boilerplate info conveyance and menu bars quick and easy.
@@ -29,8 +29,11 @@ def hackpackify(request, page_context):
       {'name':'Home', 'url':'/'},
       {'name':'About', 'url':'/about/'},
     ]
-  project_name = "A Django HackPack Project"
+  #HP project_name is used in navbar, copyright (footer), about page, and <title>
+  project_name = "A Django HackPack Project" 
+  #HP project_description is used in <meta name="description"> and the about page.
   project_description = "A super cool app."
+  #HP Founder information is in popups linked from the footers, the about page, and <meta name="author">
   founders = [
     {'name':'Alex Rattray',
        'email':'rattray@wharton.upenn.edu',
@@ -43,14 +46,17 @@ def hackpackify(request, page_context):
        'blurb':'I\'m Greg. I like webdev and most things Boston. And Dogs.',
        'picture':'http://chucknorri.com/wp-content/uploads/2011/03/Chuck-Norris-14.jpg'},
     ]
-  global_context = {
+  hackpack_context = {
       'pages': pages,
       'project_name': project_name,
       'founders': founders,
       'project_description': project_description,
       }
-  context = dict(page_context, **global_context)
-  return RequestContext(request, context) #HP
+  if not context.__contains__('hackpack'):
+    #HP add the hackpack dict to the page's context
+    context['hackpack'] = hackpack_context
+
+  return RequestContext(request, context) #HP RequestContext is good practice. (I think).
 
 def index(request):
   message = 'hello world!' #HP just used for example. Don't do this.

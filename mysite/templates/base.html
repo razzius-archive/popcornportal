@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>{% block title %}{{project_name}} | {{thispage}}{% endblock %}</title>
+    <title>{% block title %}{{hackpack.project_name}} | {{hackpack.thispage}}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{{project_description}}">
     <meta name="author" content="{% for author in founders %}{{ author.name }},{% endfor %}">
@@ -30,8 +30,8 @@
   </head>
 
   <body>
-    <!-- HP: By executive fiat, I hereby declare it prohibited to use the navbar-inverse or navbar-fixed-top classes! -->
-    <div class="navbar navbar-static-top"> 
+    <!-- HP: By executive fiat, I hereby declare it prohibited to use the navbar-inverse class! -->
+    <div class="navbar navbar-fixed-top"> 
       <div class="navbar-inner">
         <div class="container">
           <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -39,11 +39,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="/">{{project_name}}</a>
+          <a class="brand" href="/">{{hackpack.project_name}}</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
               {% block nav %}
-                {% for page in pages %}
+                {% for page in hackpack.pages %}
                   {% if page.name == thispage %}
                     <li class="active"><a href="{{page.url}}">{{page.name}}</a></li>
                   {% else %}
@@ -61,16 +61,14 @@
       {% block content %}
       {% endblock content %}
 
-      
-
       <footer>
         <hr>
         {% block footer %}
           <center>
-            <p>&copy; {{project_name}} 2012</p>
+            <p>&copy; {{hackpack.project_name}} 2012</p>
             <p>
               A project by 
-              {% for author in founders %}
+              {% for author in hackpack.founders %}
                 <a 
                   href="{% if author.url %}{{ author.url }}{% else %}mailto:{{ author.email }}{% endif %}" 
                   rel="popover" 
