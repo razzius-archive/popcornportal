@@ -9,7 +9,7 @@ from django.template import RequestContext
 #HP app-specific stuff
 from app.models import *
 from app.forms import *
-import settings
+import settings, urls
 
 #HP everything else (these are usually useful)
 import os, sys, datetime, json
@@ -18,17 +18,17 @@ import os, sys, datetime, json
 #HP:
 def hackpackify(request, context):
   '''
-    Updates a view's context to include variables expected in base.html
-    Intended to make boilerplate info conveyance and menu bars quick and easy.
-    and returns a RequestContext of the resulting dict (which is usually better).
+  Updates a view's context to include variables expected in base.html
+  Intended to make boilerplate info conveyance and menu bars quick and easy.
+  and returns a RequestContext of the resulting dict (which is usually better).
 
-    CHANGE EVERYTHING IN THIS!
+  CHANGE EVERYTHING IN THIS!
   '''
-  pages = [
-      #HP These pages will appear in the top bar. List does not have to be exhaustive.
-      {'name':'Home', 'url':'/'},
-      {'name':'About', 'url':'/about/'},
-    ]
+  pages = []
+  for urlpat in urls.urlpatterns:
+    if urlpat.__dict__.__contains__('name'):
+      if '(' not in urlpat.regex.pattern:
+        pages.append({'name':urlpat.name, 'url':urlpat.regex.pattern.replace('^','/').replace('$','')})
   #HP project_name is used in navbar, copyright (footer), about page, and <title>
   project_name = "A Django HackPack Project" 
   #HP project_description is used in <meta name="description"> and the about page.

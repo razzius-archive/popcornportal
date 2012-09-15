@@ -22,7 +22,7 @@ urlpatterns = patterns('',
     
     #HP the real pages
 
-    (r'^$', views.index),
-    (r'^about/$', views.about),
+    (r'^$', views.index, {}, "Home"),
+    (r'^about/$', views.about, {}, "About"),
     #HP add pages here
 )

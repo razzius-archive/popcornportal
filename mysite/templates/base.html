@@ -42,13 +42,10 @@
           <a class="brand" href="/">{{hackpack.project_name}}</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
+              {% load hackpack_tags %}
               {% block nav %}
                 {% for page in hackpack.pages %}
-                  {% if page.name == thispage %}
-                    <li class="active"><a href="{{page.url}}">{{page.name}}</a></li>
-                  {% else %}
-                    <li><a href="{{page.url}}">{{page.name}}</a></li>
-                  {% endif %}
+                  <li class="{% active request page.url %}"><a href="{{page.url}}">{{page.name}}</a></li>
                 {% endfor %}
               {% endblock nav %}
             </ul>
