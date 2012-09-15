@@ -29,10 +29,13 @@ def hackpackify(request, context):
     if urlpat.__dict__.__contains__('name'):
       if '(' not in urlpat.regex.pattern:
         pages.append({'name':urlpat.name, 'url':urlpat.regex.pattern.replace('^','/').replace('$','')})
+  
   #HP project_name is used in navbar, copyright (footer), about page, and <title>
   project_name = "A Django HackPack Project" 
+  
   #HP project_description is used in <meta name="description"> and the about page.
   project_description = "A super cool app."
+  
   #HP Founder information is in popups linked from the footers, the about page, and <meta name="author">
   founders = [
     {'name':'Alex Rattray',
