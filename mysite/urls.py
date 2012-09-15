@@ -14,9 +14,9 @@ urlpatterns = patterns('',
     #HP Important general shit
 
     # Uncomment the admin/doc line below to enable admin documentation:
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')), #HP uncommented
+    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')), #HP left commented, doesn't work in GAE
     # Uncomment the next line to enable the admin:
-    url(r'^admin/', include(admin.site.urls)), #HP uncommented
+    # url(r'^admin/', include(admin.site.urls)), #HP left commented, doesn't work in GAE
     #HP this serves our media files the easy(ish) way. 
     (r'media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}), #HP
     

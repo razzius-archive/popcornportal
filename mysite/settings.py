@@ -2,6 +2,8 @@
 #HP comments or code inserted by the HackPack team will (usually) include #HP
 
 import sys, os #HP
+#HP for gae
+from djangoappengine.settings_base import *
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -11,6 +13,9 @@ ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
+#HP EDIT THIS
+# SERVER_EMAIL = 'your_email@example.com' # from http://stackoverflow.com/questions/1400529/does-google-app-engine-with-app-engine-patch-support-emailing-admins-upon-500-er
+
 MANAGERS = ADMINS
 
 #HP the below came from http://codespatter.com/2009/04/10/how-to-add-locations-to-python-path-for-reusable-django-apps/
@@ -18,16 +23,10 @@ MANAGERS = ADMINS
 PROJECT_ROOT = os.path.dirname(__file__)
 sys.path.insert(0, PROJECT_ROOT)
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3', #HP   # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(os.path.dirname(__file__), 'sqlite.db').replace('\\','/'), #HP                     # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    }
-}
+DATABASES['native'] = DATABASES['default']
+DATABASES['default'] = {'ENGINE': 'dbindexer', 'TARGET': 'native'}
+AUTOLOAD_SITECONF = 'indexes'
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -114,6 +113,9 @@ TEMPLATE_CONTEXT_PROCESSORS = ("django.contrib.auth.context_processors.auth",
     )
 
 MIDDLEWARE_CLASSES = (
+    # This loads the index definitions, so it has to come first
+    'autoload.middleware.AutoloadMiddleware',
+    # 
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -122,7 +124,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 #HP sometimes this needs to be just 'urls'
-ROOT_URLCONF = 'mysite.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -140,17 +142,29 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     # Uncomment the next line to enable the admin:
-    'django.contrib.admin', #HP enabled it
+    # 'django.contrib.admin', #HP disabled it, doesn't work in GAE
     # Uncomment the next line to enable admin documentation:
-    'django.contrib.admindocs', #HP enabled it
+    # 'django.contrib.admindocs', #HP disabled it, doesn't work in GAE
 
     #HP -- South is a great database migration tool. 
     # Trust us, you'll need it if you're using a relational database like sqlite, MYSQL, POSTGRES
     # install south with `pip install south` (it comes pre-installed on pythonanywhere)
     # If you're not using a relational database, you can comment this out. 
-    'south', #HP
-    'mysite.app' #HP
+    # 'south', #HP south isn't needed in GAE because it's not a relational db
+    'app', #HP
+
+    #HP the below is for djangoappengine stuff
+    'djangotoolbox',
+    'autoload',
+    'dbindexer',
+    # djangoappengine should come last, so it can override a few manage.py commands
+    'djangoappengine',
 )
+
+
+# This test runner captures stdout and associates tracebacks with their
+# corresponding output. Helps a lot with print-debugging.
+TEST_RUNNER = 'djangotoolbox.test.CapturingTestSuiteRunner'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
