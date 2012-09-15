@@ -2,10 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>{% block title %}{{hackpack.project_name}} | {{hackpack.thispage}}{% endblock %}</title>
+    <title>{% block title %}{{hackpack.project_name}}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{project_description}}">
-    <meta name="author" content="{% for founder in founders %}{{ founder.name }},{% endfor %}">
+    <meta name="description" content="{{hackpack.project_description}}">
+    <meta name="author" content="{% for founder in hackpack.founders %}{{ founder.name }},{% endfor %}">
 
     <!-- Le styles -->
     <link href="/media/css/bootstrap.min.css" rel="stylesheet">
