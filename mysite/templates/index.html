@@ -6,28 +6,61 @@
 {{block.super}} 
 {% endblock styles %}
 
-{% block nav %}
-<!-- HP: Usually leave this alone. You can override the default by removing block.super or augment it by adding things above or below.  -->
-{{block.super}}
-{% endblock nav %}
-
 {% block content %}
 <!-- HP: This is where all your shit goes! Remove what's currently here.  -->
 
   <!-- Main hero unit for a primary marketing message or call to action -->
-  <div class="hero-unit">
-    <h1>Hello, world!</h1>
-    <p>Your Stuff Here. </p>
-    <p></p>
-  </div>
+
 
 {% endblock content %}
 
 {% block footer %}
 <!-- HP: Usually leave this alone. You can override the default by removing block.super or augment it by adding things above or below.  -->
-{{block.super}}
 {% endblock footer %}
 
 {% block scripts %}
 <!-- HP: Put your scripts here -->
+<script>
+    $(document).ready(function () {
+        $.getJSON('/getMovieFromNYT/', function(data) {
+            movieTitle = data.results[0].display_title;
+            findYoutubeVideo(movieTitle);
+        })
+        function getYoutubeURL(id) {
+            return '<iframe width="500" height="281" src="http://www.youtube.com/embed/' + id +'?wmode=transparent&autohide=1&egm=0&hd=1&iv_load_policy=3&modestbranding=1&rel=0&showinfo=0&showsearch=0" frameborder="0" allowfullscreen></iframe>';
+        }
+        function findYoutubeVideo(movieTitle){
+            movieTitle = movieTitle
+            var cleanMovieTitle = movieTitle.replace(" ", "%20").replace(" ", "%20").replace(" ", "%20");
+            $.get('/getVideoFromYoutube/'+cleanMovieTitle+'/', function(data) {
+                $('body').append(getYoutubeURL(data));
+            })
+        }
+        
+    });
+</script>
+<div id="fb-root"></div>
+<!--Make the login-->
+<!--<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=282950051818699";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+--><!--END FACEBOOK-->
+<!--The body starts here-->
+<div id="movie"></div>
+<!--FACEBOOK MORE-
+<div class="fb-login-button" data-show-faces="false" data-width="200" data-max-rows="1"></div>
+-click this button to display name-->
+<!--<script>
+function alertMyName() {
+    FB.api('/599697575?fields=id,name', function(response) {
+        alert(response.name);
+    });
+}
+</script>-->
+<!--END FACEBOOK-->
 {% endblock scripts %}

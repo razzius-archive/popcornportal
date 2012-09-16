@@ -1,27 +1,19 @@
+footer {
+  color:white;
+}
 body {
-	padding-top:60px; /* this is for the navbar */
+  background:black;
 }
-/* Tablet to desktop
-------------------------- */
-@media (min-width: 768px) and (max-width: 980px) {
-  /* Remove any padding from the body */
-  body {
-    padding-top: 0;
-  }
+img.bg-img {
+  display: block !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-height: 100%;
+  min-width: 100%;
+  width: 100%;
+  z-index: -1000;
 }
-  /* Tablet
-------------------------- */
-  @media (max-width: 767px) {
-  /* Remove any padding from the body */
-  body {
-    padding-top: 0;
-  }
-}
-  /* Landscape phones
-------------------------- */
-@media (max-width: 480px) {
-  /* Remove padding above jumbotron */
-  body {
-    padding-top: 0;
-  }
+#main_container {
+  min-height:500px;
 }

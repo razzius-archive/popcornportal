@@ -31,10 +31,10 @@ def hackpackify(request, context):
         pages.append({'name':urlpat.name, 'url':urlpat.regex.pattern.replace('^','/').replace('$','')})
   
   #HP project_name is used in navbar, copyright (footer), about page, and <title>
-  project_name = "A Django HackPack Project" 
+  project_name = "Popcorn Portal" 
   
   #HP project_description is used in <meta name="description"> and the about page.
-  project_description = "A super cool app."
+  project_description = "Pick Flicks based on their innards"
   
   #HP Founder information is in popups linked from the footers, the about page, and <meta name="author">
   founders = [
@@ -43,11 +43,11 @@ def hackpackify(request, context):
        'url':'http://alexrattray.com/',
        'blurb':'I\'m Alex. I like webdev and most things Seattle.',
        'picture':'http://profile.ak.fbcdn.net/hprofile-ak-ash2/273392_515004220_1419119046_n.jpg'},
-    {'name':'Greg Terrono',
-       'email':'gterrono@seas.upenn.edu',
-       'url':'http://twitter.com/',
-       'blurb':'I\'m Greg. I like webdev and most things Boston. And Dogs.',
-       'picture':'http://chucknorri.com/wp-content/uploads/2011/03/Chuck-Norris-14.jpg'},
+    {'name':'Razzi Abuissa',
+       'email':'razzi.abuissa@facebook.com',
+       'url':'http://www.thedp.com/staff/razzi_abuissa',
+       'blurb':'Razzi is rad. ',
+       'picture':'http://sphotos-a.xx.fbcdn.net/hphotos-ash4/303412_10151222262202576_730518393_n.jpg'},
     ]
   hackpack_context = {
       'pages': pages,
@@ -62,15 +62,11 @@ def hackpackify(request, context):
   return RequestContext(request, context) #HP RequestContext is good practice. (I think).
 
 def index(request):
-  message = 'hello world!' #HP just used for example. Don't do this.
   context = {
-    'thispage': 'Home', #HP necessary to know which page we're on (for nav). Always spell the same as the 'Name' field in hackpackify()'s `pages` variable
-    'message':message,
   }
   return render_to_response('index.html', hackpackify(request, context))
 
 def about(request):
   context = {
-    'thispage':'About', #HP necessary to know which page we're on (for nav). Always spell the same as the 'Name' field in hackpackify()'s `pages` variable
   }
   return render_to_response('about.html', hackpackify(request, context))
