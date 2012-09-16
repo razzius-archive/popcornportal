@@ -73,8 +73,9 @@ div.loading center h1 {
   cursor:pointer;
 }
 .popcorn h3 {
-  margin-top:30px;
+  margin-top:50px;
   text-shadow: 2px 2px white;
+  line-height: 24px;
 }
 a.keyword_item {
   color:black;
