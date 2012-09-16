@@ -1,0 +1,25 @@
+<div id="moviesCarousel" class="carousel slide">
+  <!-- Carousel items -->
+  <div class="carousel-inner">
+    {% for movie in movies %}
+      <div class="{% if forloop.counter == 1 %}active{% endif %} item">
+        {% if movie.video %}
+          <iframe width="500" height="281" src="http://www.youtube.com/embed/{{movie.video}}?wmode=transparent&autohide=1&egm=0&hd=1&iv_load_policy=3&modestbranding=1&rel=0&showinfo=0&showsearch=0" frameborder="0" allowfullscreen></iframe>
+        {% else %}
+          <center>
+            <h1>
+              <br/><br/><br/>
+              Sorry, no Video could be found.
+            </h1>
+          </center>
+        {% endif %}
+        <div class="carousel-caption">
+          
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <!-- Carousel nav -->
+  <a class="carousel-control left" href="#moviesCarousel" data-slide="prev">&lsaquo;</a>
+  <a class="carousel-control right" href="#moviesCarousel" data-slide="next">&rsaquo;</a>
+</div>
