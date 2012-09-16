@@ -52,3 +52,9 @@ img.bg-img {
   padding: 15px;
   background: #333;
 }
+div.loading {
+  position:fixed;
+  top:200px;
+  z-index:2000;
+  width:100%;
+}

@@ -21,13 +21,19 @@
 <!-- HP: Put your scripts here -->
 <script>
     var app = {};
+    var loading = $('.loading');
     app.chosen_keywords = [];
     $(function () {
         console.log('hello');
+        loading.show()
         $.getJSON('/getKeywords/', function(data, textStatus, xhr) {
             console.log('got keywords')
             console.log(textStatus);
             console.log(xhr);
+            
+            changePopcorns(data);
+        });
+        function changePopcorns(data) {
             console.log(data);
             app.keywords = data;
             for (i in data) {
@@ -36,24 +42,39 @@
             }
             $('.keyword_item').click(function(){
                 if (app.chosen_keywords.indexOf($(this).attr('data-link')) < 0) {
+                    loading.show()
                     app.chosen_keywords.push($(this).attr('data-link')); // adds to global thing
                     $('ul.nav').append('<span class="chosen_keyword btn btn-inverse ">'+$(this).html()+'</span>');
-                    console.log($('.show_me_the_trailers').length);
                     if ($('.show_me_the_trailers').length===0) {
                         $('div.nav-collapse').append('<a href="#" class="show_me_the_trailers btn pull-right btn-danger">Show me the Trailers! &#187;</a>');
                         $('.show_me_the_trailers').click(function(){
                             // show them the money!
-                            $('#links_here').html('');
+                            loading.show()
                             displayMovies();
                         });
                     }
+                    updateKeywords();
                 }
             });
-        });
+            loading.hide()
+        }
+        function updateKeywords() {
+            $('#links_here').html('');
+            var keywords = app.chosen_keywords.join();
+            var url = '/getRelatedKeywords/'+keywords+'/';
+            $.getJSON(url, function(data){
+                if (data.length < 1) {
+                    $('.show_me_the_trailers').click();
+                } else {
+                    changePopcorns(data);
+                }
+            })
+        }
+
         function displayMovies() {
             console.log('in display movies');
-            bubbles = app.chosen_keywords.join();
-            url = '/moviesCarousel/'+bubbles+'/';
+            var bubbles = app.chosen_keywords.join();
+            var url = '/moviesCarousel/'+bubbles+'/';
             $('#main_container').append('<div id="carouselHere"></div>')
             console.log(url);
             $('#main_container').prepend('<div class="screen"></div>');
@@ -64,7 +85,7 @@
                     interval:false,
                 });
             });
-
+            loading.hide();
         };
         function getYoutubeURL(id) {
             return '<iframe width="500" height="281" src="http://www.youtube.com/embed/' + id +'?wmode=transparent&autohide=1&egm=0&hd=1&iv_load_policy=3&modestbranding=1&rel=0&showinfo=0&showsearch=0" frameborder="0" allowfullscreen></iframe>';

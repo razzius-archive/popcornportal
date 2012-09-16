@@ -20,6 +20,8 @@ trailer = re.compile("<link rel='alternate' type='text.html' href='https:..www.y
 non_numbers = re.compile('[^\d_]+')
 non_chars = re.compile('[^\w_\s]+')
 image_url_pattern = re.compile(r'\._(.+)\.jpg')
+netflix_key = 'kbstfsxcn9svf6ryg2ms35xt'
+shared_secret = 'RfjJgCNGAY'
 linfo = logging.info
 
 
@@ -112,6 +114,40 @@ def getKeywords(request):
     response = json.dumps(keyword_pairs[:100]) # only first 
 
   return HttpResponse(response, content_type="application/json")
+
+def getRelatedKeywords(request, keywords):
+    keywords = keywords.split(',')
+    url = 'http://www.imdb.com/keyword/'
+    for keyword in keywords:
+        url+=str(keyword)
+        url+='/'
+    linfo(url)
+    page = urllib2.urlopen(url)
+    soup = BeautifulSoup(page.read())
+    try:
+        keywords = soup.select('div.facets')[0]
+    except:
+        return HttpResponse('None Available')
+    links = keywords.select('span')
+    badlinks = keywords.select('span.facet_not_top')
+    keyword_pairs = []
+    for link in links:
+        if link not in badlinks:
+            text = link.getText()
+            linfo(text)
+            try:
+                (name, num) = text.rsplit('(',1)
+            except:
+                continue
+            num = int(non_numbers.sub('', num)) # get rid of non-digits so it can be an int
+            name = str(non_chars.sub('',name)) #get rid of noncharacter symbols 
+            slug = name.lower().replace(' ','-')
+            linfo(name+str(num))
+            keyword_pairs.append([name, slug, num])
+    random.shuffle(keyword_pairs)
+    linfo(keyword_pairs)
+    response = json.dumps(keyword_pairs)
+    return HttpResponse(response)
 
 def _getMoviesFromBubbles(bubbles):
     '''
