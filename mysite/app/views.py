@@ -22,6 +22,7 @@ non_chars = re.compile('[^\w_\s]+')
 image_url_pattern = re.compile(r'\._(.+)\.jpg')
 netflix_key = 'kbstfsxcn9svf6ryg2ms35xt'
 shared_secret = 'RfjJgCNGAY'
+
 linfo = logging.info
 
 
@@ -236,3 +237,11 @@ def getVideoFromYoutube(request, movieTitle, year):
 def moviesCarousel(request, bubbles):
   context = {'movies': _getMoviesFromBubbles(bubbles) }
   return render_to_response('moviesCarousel.html', context)
+
+# def getNetflix(request, movieName):
+#     movieName.replace('-','+')
+#     url = 'http://api-public.netflix.com/catalog/titles?oauth_consumer_key=kbstfsxcn9svf6ryg2ms35xt&oauth_nonce=144657334663077&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1347807894&oauth_version=1.0&term=%s&oauth_signature=KOA0qXVdWELmAeevd6dsAxiFb%2F0%3D' % (movieName)
+#     xml = urllib2.urlopen(url)
+#     soup = BeautifulSoup(xml.read())
+#     linfo(soup.prettify())
+#     return HttpResponse(soup)

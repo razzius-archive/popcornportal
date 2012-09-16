@@ -24,7 +24,7 @@ img.bg-img {
   cursor:default;
 }
 .screen {
-  background-image:url('/media/img/fabric_plaid/fabric_plaid_@2X.png');
+  background-image:url('/media/img/fabric_plaid/fabric_plaid_2X.png');
   width:100%;
   border:20px solid black;
   /*margin-top:60px;*/
@@ -66,14 +66,16 @@ div.loading center h1 {
   width:175px;
   height:154px;
   top:400px;
-  background-image:url("/media/img/PopcornKernel.png");
+  background-image:url("/media/img/PopcornKernelFinal.png");
   background-repeat: no-repeat;
+  background-size: 100%;
   text-align: center;
   cursor:pointer;
 }
 .popcorn h3 {
-  margin-top:50px;
+  margin-top:30px;
+  text-shadow: 2px 2px white;
 }
-.popcorn h3 a {
+a.keyword_item {
   color:black;
 }

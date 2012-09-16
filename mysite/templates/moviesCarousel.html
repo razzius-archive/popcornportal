@@ -5,7 +5,7 @@
       <div class="{% if forloop.counter == 1 %}active{% endif %} item">
         <center>
           {% if movie.video %}
-            <iframe width="853" height="505" src="http://www.youtube.com/embed/{{movie.video}}?wmode=transparent&autohide=1&egm=0&hd=1&iv_load_policy=3&modestbranding=1&rel=0&showinfo=0&showsearch=0&width=853&height=505" frameborder="0" allowfullscreen></iframe>
+            <iframe width="853" height="505" src="http://www.youtube.com/embed/{{movie.video}}?wmode=transparent&autohide=1&egm=0&hd=1&iv_load_policy=3&modestbranding=1&rel=0&showinfo=0&showsearch=0&width=853&height=505{% if forloop.counter == 1 %}&autoplay=1{% endif %}" frameborder="0" allowfullscreen></iframe>
           {% else %}
             <h1>
               <br/><br/><br/>
