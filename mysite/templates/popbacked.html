@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<style type="text/css">
+		.popcorn{
+			position:absolute;
+			width:175px;
+			height:154px;
+			top:400px;
+			background-image:url("../media/img/PopcornKernel.png");
+		}
+		</style>
+		<title>HTML5 Example</title>
+		<script type="text/javascript" src="raf.js"></script>
+		<script src="http://code.jquery.com/jquery-1.8.1.js"></script>
+		<script type="text/javascript">
+			var waitTime = Math.random()*20;
+			var listCount = 0;
+			var count = 0;
+			var i;
+			var x;
+			var y;
+			var xvel;
+			var yvel;
+			var d;
+			var speed = .1;
+			var domain = 700;
+			var timer = 0;
+			var top = 300;
+			var left = 400;
+			var keyword;
+			top = top.toString()+"px;";
+			left = left.toString()+"px;";
+			var referenceArray = [];
+			var popcornArray;
+			function init() {
+				popcornArray = [
+				["Action", 'action', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}], 
+				["sActisdfon", 'acdtion', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}],
+				["fActsdaion", 'actibsdfdson', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}],
+				["bAasdfction", 'actisdfdson', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}],
+				["bAction", 'actdsdisdfdon', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}],
+				["bAcfasdftion", 'actisdason', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}],
+				["bAcsdtion", 'actifasddon', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}],
+				["bAcasdftion", 'actidsaon', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}],
+				["bActasdfion", 'actdiasfdon', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}],
+				["bActdsfsdsdion", 'actidon', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}],
+				["bAcasdfastion", 'actidasdfon', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}],
+				["bAcasfftion", 'actifsddasdfon', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}],
+				["bAcasdftion", 'actasidasdfon', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}],
+				["bAcasdfsdstion", 'actidadssdfon', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}],
+				["bAcasdftiodsfn", 'actdsidasdfon', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}],
+				["bAcasdftsdion", 'actsdaidasdfon', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}],
+				["ssAcsdsdftion", 'actsasdfdfsion', 345, {x:450, y:530, xvel:Math.random()*10-5, yvel:-9+Math.random()*2}]];
+
+				//referenceArray = [];
+				// for(i=0; i<popcornArray.length; i++){
+				// 	x = popcornArray[i][3]["x"];
+				// 	keyword = popcornArray[i][1];)
+				// 	var elem = '<div id="'+keyword+'" class="popcorn" style="left:'+x+'px;"></div>';
+				// 	$('body').append(elem);
+				// 	referenceArray.push(keyword);
+				// }
+				loop();
+			}
+			function loop() {
+				count++;
+				console.log(waitTime, count);
+				//logic to make a particle or not
+				if(count>=waitTime && listCount<popcornArray.length){
+					x = popcornArray[listCount][3]["x"];
+					keyword = popcornArray[listCount][1];
+					var elem = '<div id="'+keyword+'" class="popcorn" style="left:'+x+'px;"></div>';
+					//need to create handler for clicks
+					$('body').append(elem);
+					referenceArray.push(keyword);
+					count = 0;
+					listCount++;
+					waitTime = Math.random()*20;
+				}
+				requestAnimationFrame(loop);
+				for(i=0; i<listCount; i++){
+					x = popcornArray[i][3]["x"];
+					y = popcornArray[i][3]["y"];
+					xvel = popcornArray[i][3]["xvel"];
+					yvel = popcornArray[i][3]["yvel"];
+					//update those vals
+					popcornArray[i][3]["x"]=x+xvel;
+					popcornArray[i][3]["y"]=y+yvel;
+					popcornArray[i][3]["yvel"]=yvel+.15;
+					popcornArray[i][3]["xvel"]*=.995;
+					if(Math.abs(popcornArray[i][3]["xvel"])<=.1){
+						popcornArray[i][3]["xvel"] = 0
+					}
+
+					object = document.getElementById(referenceArray[i]);
+					object.style.left = x+xvel+"px";
+					object.style.top = y+yvel+"px";
+					if(x+xvel>=screen.width-200){
+						popcornArray[i][3]["x"] = screen.width-202;
+						popcornArray[i][3]["xvel"] *=-.8;
+					}
+					if(x+xvel <=0){
+						popcornArray[i][3]["x"] = 2;
+						popcornArray[i][3]["xvel"] *=-.8;
+					}
+					if(y>=550){
+						if(Math.abs(yvel)>=1.6){
+							popcornArray[i][3]["y"] = 548;
+							popcornArray[i][3]["yvel"] *=-.6;
+						}else{
+							popcornArray[i][3]["yvel"] = 0;
+						}
+					}
+					// console.log(popcornArray[i][0])
+				}
+			}
+		</script>
+	</head>
+
+	<body onload="init()">	
+	</body>
+</html>

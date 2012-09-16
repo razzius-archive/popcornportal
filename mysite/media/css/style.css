@@ -58,3 +58,19 @@ div.loading {
   z-index:2000;
   width:100%;
 }
+.popcorn{
+  position:fixed;
+  width:175px;
+  height:154px;
+  top:400px;
+  background-image:url("/media/img/PopcornKernel.png");
+  background-repeat: no-repeat;
+  text-align: center;
+  cursor:pointer;
+}
+.popcorn h3 {
+  margin-top:50px;
+}
+.popcorn h3 a {
+  color:black;
+}
