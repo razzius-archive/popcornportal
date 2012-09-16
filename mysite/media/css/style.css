@@ -17,3 +17,8 @@ img.bg-img {
 #main_container {
   min-height:500px;
 }
+.chosen_keyword {
+  float:left;
+  margin-left:10px;
+  cursor:default;
+}

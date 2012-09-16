@@ -12,8 +12,16 @@ from app.forms import *
 import settings, urls
 
 #HP everything else (these are usually useful)
-import os, sys, datetime, json
+import os, sys, datetime, json, re, string, urllib2, logging, random
 # from bootstrap.forms import BootstrapModelForm, Fieldset
+from bs4 import BeautifulSoup
+
+trailer = re.compile("<link rel='alternate' type='text.html' href='https:..www.youtube.com.watch.v=(.*?)&")
+non_numbers = re.compile('[^\d_]+')
+non_chars = re.compile('[^\w_\s]+')
+image_url_pattern = re.compile(r'\._(.+)\.jpg')
+linfo = logging.info
+
 
 #HP:
 def hackpackify(request, context):
@@ -70,3 +78,120 @@ def about(request):
   context = {
   }
   return render_to_response('about.html', hackpackify(request, context))
+
+def getMovieFromNYT(request, bubble1="neighbor", bubble2="totoro"):
+    #make the api call to NYT
+    query = bubble1 + "+" + bubble2
+    linfo(query)
+    page = urllib2.urlopen("http://en.wikipedia.org/w/api.php?action=query&list=search&srseach={}&srprop=timestamp".format(query))
+    NYTResponse = page.read()
+    linfo(NYTResponse)
+    # do something with 'results' here
+    # convert to a variable which is a string of the movie name
+    # call the youtube api and get a video url
+    return HttpResponse(NYTResponse)
+
+def getKeywords(request):
+  keyword_pairs = []
+
+  with open('keyword1000.html', 'rU') as keyword_out_file:
+    soup = BeautifulSoup(keyword_out_file.read())
+    links = soup.findAll('span')
+    
+    for link in links:
+        text = link.getText()
+        (name, num) = text.rsplit('(',1)
+        num = int(non_numbers.sub('', num)) # get rid of non-digits so it can be an int
+        name = str(non_chars.sub('',name)) #get rid of noncharacter symbols 
+        slug = name.lower().replace(' ','-')
+        linfo(name+str(num))
+        keyword_pairs.append([name, slug, num])
+    # keyword_pairs.sort(key=lambda x: -x[-1]) #this ranks by number of flicks
+    random.shuffle(keyword_pairs)
+    linfo(keyword_pairs)
+    response = json.dumps(keyword_pairs[:100]) # only first 
+
+  return HttpResponse(response, content_type="application/json")
+
+def _getMoviesFromBubbles(bubbles):
+    '''
+    takes a comma-separated list of bubbles of arbitrary length. returns list of movies
+    '''
+    url = 'http://www.imdb.com/keyword/'
+    bubbles = bubbles.split(',')
+    for bubble in bubbles:
+        url+=str(bubble)
+        url+='/'
+    linfo(url)
+    page = urllib2.urlopen(url)
+    soup = BeautifulSoup(page.read())
+    linfo(soup.select('table.results'))
+    try:
+      results = soup.select('table.results')[0]
+    except:
+      return HttpResponse('None Available')
+
+    rows = results.select('tr.detailed') #detailed limits to top 10 and excludes headers
+    movies = []
+    for row in rows:
+        cells = row.findAll('td') 
+        name = cells[2].a.get_text()
+        year = cells[2].span.get_text()
+        year = non_numbers.sub('', year)
+        if len(cells[2].select('p.outline')) > 0:
+            description = cells[2].select('p.outline')[0].get_text()
+        else:
+            description = ''
+        image_url = cells[1].find('img')['src']
+        linfo(image_url)
+        image_url = image_url_pattern.sub('',image_url)+'.jpg'
+        linfo(image_url)
+        if '10' in row.select('td.user_rating')[0].get_text():
+            rating = float(row.select('td.user_rating')[0].b.string)
+        else:
+            rating = None
+        num_votes = float(row.select('td.num_votes')[0].get_text().replace(',',''))
+        video = _getVideoFromYoutube(name, year)
+        movies.append({
+            'name':name,
+            'year':year,
+            'description':description,
+            'image_url':image_url,
+            'rating':rating,
+            'num_votes':num_votes,
+            'video':video,
+            })
+    linfo(movies)
+    return movies
+
+def getMoviesFromBubbles(request, bubbles):
+  movies = _getMoviesFromBubbles(bubbles)
+  response = json.dumps(movies)
+  return HttpResponse(response)
+
+# getMoviesForBubbles('hi', 'boyfriend-girlfriend-relationship,murder,psychiatrist')
+
+def _getVideoFromYoutube(movieTitle, year):
+  #get the words from the title
+  linfo(movieTitle+year)
+  words = movieTitle.split()
+  movie = ""
+  for word in words:
+    movie += word + "+"
+  movie+= year+"+"
+  movie += "Trailer"
+  page = urllib2.urlopen("https://gdata.youtube.com/feeds/api/videos?q={}&orderby=relevance&start-index=1&max-results=1&v=2".format(movie))
+  xml=page.read()
+  try:
+    video = re.findall(trailer, xml)[0]
+  except:
+    video = ''
+  return video 
+
+def getVideoFromYoutube(request, movieTitle, year):
+  video = _getVideoFromYoutube(movieTitle, year)
+  return HttpResponse(video)
+
+def movieCarousel(request, bubbles):
+  context = _getMoviesFromBubbles(bubbles)
+  return render_to_response('movieCarousel.html', context)

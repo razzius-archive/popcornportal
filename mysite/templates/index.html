@@ -6,12 +6,11 @@
 {{block.super}} 
 {% endblock styles %}
 
+{% block nav %}
+{% endblock nav %}
+
 {% block content %}
-<!-- HP: This is where all your shit goes! Remove what's currently here.  -->
-
-  <!-- Main hero unit for a primary marketing message or call to action -->
-
-
+<ul id="links_here"></ul>
 {% endblock content %}
 
 {% block footer %}
@@ -21,11 +20,52 @@
 {% block scripts %}
 <!-- HP: Put your scripts here -->
 <script>
-    $(document).ready(function () {
-        $.getJSON('/getMovieFromNYT/', function(data) {
-            movieTitle = data.results[0].display_title;
-            findYoutubeVideo(movieTitle);
-        })
+    var app = {};
+    app.chosen_keywords = [];
+    $(function () {
+        console.log('hello');
+        $.getJSON('/getKeywords/', function(data, textStatus, xhr) {
+            console.log('got keywords')
+            console.log(textStatus);
+            console.log(xhr);
+            console.log(data);
+            app.keywords = data;
+            for (i in data) {
+                var a = '<li><a data-link="'+data[i][1]+'" data-weight="'+data[i][2]+'" class="keyword_item">'+data[i][0]+'</a></li>';
+                $('#links_here').append(a);
+            }
+            $('.keyword_item').click(function(){
+                if (app.chosen_keywords.indexOf($(this).attr('data-link')) < 0) {
+                    app.chosen_keywords.push($(this).attr('data-link')); // adds to global thing
+                    $('ul.nav').append('<span class="chosen_keyword btn btn-inverse ">'+$(this).html()+'</span>');
+                    console.log($('.show_me_the_trailers').length);
+                    if ($('.show_me_the_trailers').length===0) {
+                        $('div.nav-collapse').append('<a href="#" class="show_me_the_trailers btn pull-right btn-danger">Show me the Trailers! &#187;</a>');
+                        $('.show_me_the_trailers').click(function(){
+                            // show them the money!
+                            $('#links_here').html('');
+                            displayMovies();
+                        });
+                    }
+                }
+            });
+        });
+        function displayMovies() {
+            console.log('in display movies');
+            bubbles = app.chosen_keywords.join();
+            url = '/getMoviesFromBubbles/'+bubbles+'/';
+            console.log(url);
+            $.getJSON(url, function(data){
+                console.log(data);
+                app.movies = data;
+                console.log(html);
+                $('#links_here').html(html);
+                $('.carousel').carousel({
+                    interval:false,
+                });
+
+            });
+        };
         function getYoutubeURL(id) {
             return '<iframe width="500" height="281" src="http://www.youtube.com/embed/' + id +'?wmode=transparent&autohide=1&egm=0&hd=1&iv_load_policy=3&modestbranding=1&rel=0&showinfo=0&showsearch=0" frameborder="0" allowfullscreen></iframe>';
         }
