@@ -155,7 +155,11 @@ function updateKeywords() {
         } else {
             changePopcorns(data);
         }
-    })
+    });
+    console.log(document.domain);
+    var domain = document.domain.indexOf('localhost') < 0 ? document.domain : document.domain+':8080';
+    console.log(domain);
+    window.history.pushState({},"", 'http://'+domain+'/movies/'+keywords+'/')
 }
 
 function displayMovies() {
