@@ -39,6 +39,7 @@ function keyword_item_click(thing) {
                 // show them the money!
                 $('.loading').show()
                 displayMovies();
+                $('.popcorn').remove();
             });
         }
         updateKeywords();
@@ -137,7 +138,9 @@ function changePopcorns(data) {
         // $('#links_here').append(a);
     // }
     $('.keyword_item').click(function(){
+    	$('.popcorn').fadeOut(300);
         keyword_item_click($(this));
+        $('.popcorn').remove();
     });
     $('.loading').hide()
     init();
@@ -165,6 +168,9 @@ function displayMovies() {
     $('.screen').slideDown(1000);
     // $('.popcorn').fadeOut(200, function(){
 	$('.popcorn').remove();
+	popArr = [];
+	referenceArray = [];
+	count = 0;
     // });
     $('#carouselHere').load(url, function(responseText, textStatus, XMLHttpRequest){
         console.log('carousel loaded');
