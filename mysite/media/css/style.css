@@ -15,10 +15,40 @@ img.bg-img {
   z-index: -1000;
 }
 #main_container {
+  margin-top: 60px;
   min-height:500px;
 }
 .chosen_keyword {
   float:left;
   margin-left:10px;
   cursor:default;
+}
+.screen {
+  background-image:url('/media/img/fabric_plaid/fabric_plaid_@2X.png');
+  width:100%;
+  border:20px solid black;
+  /*margin-top:60px;*/
+  height:505px;
+  width:853px;
+  display:none;
+  position:absolute;
+  left:10%;
+  right:10%;
+  margin-left:auto;
+  margin-right: auto;
+  margin-top:-10px;
+}
+.carousel-caption {
+  position:relative;
+  margin-top: 30px;  
+  margin-left: 200px;
+  margin-right: 200px;
+  /*left:50%;*/
+  /*right:50%;*/
+  /*height:150px;*/
+  /*bottom:-150px;*/
+}
+.movie-caption {
+  padding: 15px;
+  background: #333;
 }

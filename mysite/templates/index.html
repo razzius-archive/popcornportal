@@ -53,18 +53,18 @@
         function displayMovies() {
             console.log('in display movies');
             bubbles = app.chosen_keywords.join();
-            url = '/getMoviesFromBubbles/'+bubbles+'/';
+            url = '/moviesCarousel/'+bubbles+'/';
+            $('#main_container').append('<div id="carouselHere"></div>')
             console.log(url);
-            $.getJSON(url, function(data){
-                console.log(data);
-                app.movies = data;
-                console.log(html);
-                $('#links_here').html(html);
+            $('#main_container').prepend('<div class="screen"></div>');
+            $('.screen').slideDown(1000);
+            $('#carouselHere').load(url, function(responseText, textStatus, XMLHttpRequest){
+                console.log('carousel loaded');
                 $('.carousel').carousel({
                     interval:false,
                 });
-
             });
+
         };
         function getYoutubeURL(id) {
             return '<iframe width="500" height="281" src="http://www.youtube.com/embed/' + id +'?wmode=transparent&autohide=1&egm=0&hd=1&iv_load_policy=3&modestbranding=1&rel=0&showinfo=0&showsearch=0" frameborder="0" allowfullscreen></iframe>';

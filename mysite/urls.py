@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     (r"^getMovieFromNYT/$",views. getMovieFromNYT),
     (r"^getKeywords/$", views.getKeywords),
     (r"^getMoviesFromBubbles/(.+)/$", views.getMoviesFromBubbles),
+    (r"^moviesCarousel/(.+)/$", views.moviesCarousel),
     (r"^getVideoFromYoutube/(.+)/(\d+)/$", views.getVideoFromYoutube),
     #HP add pages here
 )

@@ -12,7 +12,7 @@ from app.forms import *
 import settings, urls
 
 #HP everything else (these are usually useful)
-import os, sys, datetime, json, re, string, urllib2, logging, random
+import os, sys, datetime, json, re, string, urllib2, logging, random, unicodedata
 # from bootstrap.forms import BootstrapModelForm, Fieldset
 from bs4 import BeautifulSoup
 
@@ -122,6 +122,7 @@ def _getMoviesFromBubbles(bubbles):
     for bubble in bubbles:
         url+=str(bubble)
         url+='/'
+    url+='?sort=num_votes'
     linfo(url)
     page = urllib2.urlopen(url)
     soup = BeautifulSoup(page.read())
@@ -150,7 +151,10 @@ def _getMoviesFromBubbles(bubbles):
             rating = float(row.select('td.user_rating')[0].b.string)
         else:
             rating = None
-        num_votes = float(row.select('td.num_votes')[0].get_text().replace(',',''))
+        try:
+            num_votes = float(row.select('td.num_votes')[0].get_text().replace(',',''))
+        except:
+            num_votes = 0
         video = _getVideoFromYoutube(name, year)
         movies.append({
             'name':name,
@@ -174,6 +178,7 @@ def getMoviesFromBubbles(request, bubbles):
 def _getVideoFromYoutube(movieTitle, year):
   #get the words from the title
   linfo(movieTitle+year)
+  movieTitle = unicodedata.normalize('NFKD', movieTitle).encode('ascii','ignore')
   words = movieTitle.split()
   movie = ""
   for word in words:
@@ -192,6 +197,6 @@ def getVideoFromYoutube(request, movieTitle, year):
   video = _getVideoFromYoutube(movieTitle, year)
   return HttpResponse(video)
 
-def movieCarousel(request, bubbles):
-  context = _getMoviesFromBubbles(bubbles)
-  return render_to_response('movieCarousel.html', context)
+def moviesCarousel(request, bubbles):
+  context = {'movies': _getMoviesFromBubbles(bubbles) }
+  return render_to_response('moviesCarousel.html', context)
