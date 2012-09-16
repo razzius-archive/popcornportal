@@ -58,6 +58,7 @@ function loop() {
 		listCount++;
 		waitTime = Math.random()*50;
 		$('.keyword_item').click(function(){
+			$('.popcorn').fadeOut(300);
 			keyword_item_click($(this));
 		})
 	}
@@ -87,7 +88,7 @@ function loop() {
 			popArr[i][3]["x"] = 2;
 			popArr[i][3]["xvel"] *=-.8;
 		}
-		console.log(i, y, yvel);
+		// console.log(i, y, yvel);
 		if (y>=560-i*10){
 			// console.log('560');
 			if(Math.abs(yvel)>=1.6){

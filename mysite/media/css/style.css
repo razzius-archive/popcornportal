@@ -58,6 +58,9 @@ div.loading {
   z-index:2000;
   width:100%;
 }
+div.loading center h1 {
+  font-size: 100px;
+}
 .popcorn{
   position:fixed;
   width:175px;
