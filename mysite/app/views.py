@@ -240,7 +240,7 @@ def moviesCarousel(request, bubbles):
 
 def movies(request, movies):
     context = {'movies':movies}
-    return render_to_response('index.html', hackpackify(context))
+    return render_to_response('index.html', hackpackify(request, context))
 
 # def getNetflix(request, movieName):
 #     movieName.replace('-','+')
