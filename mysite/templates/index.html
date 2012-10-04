@@ -25,6 +25,7 @@
     $(function () {
         console.log('hello');
         $('.loading').show()
+        {% if not movies %}
         $.getJSON('/getKeywords/', function(data, textStatus, xhr) {
             console.log('got keywords')
             console.log(textStatus);
@@ -32,6 +33,11 @@
             
             changePopcorns(data);
         });
+        {% else %}
+        app.chosen_keywords = '{{movies}}'.split(',');
+        console.log(app.chosen_keywords);
+        displayMovies();
+        {% endif %}
         
     });
 </script>

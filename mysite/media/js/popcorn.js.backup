@@ -13,9 +13,12 @@ var timer = 0;
 var keyword;
 var referenceArray = [];
 var popArr;
+
+var last_time = (new Date()).getTime(),
+	cur_time = (new Date()).getTime(),
+	mspf = 1000 / 60; // ms per frame
 function init() {
 	popArr = app.keywords;
-	var popArrLength = popArr.length;
 	for (i=0;i<popArr.length;i++) {
 		var razzi_obj = {
 			x:window.innerWidth/2,
@@ -39,32 +42,32 @@ function keyword_item_click(thing) {
                 // show them the money!
                 $('.loading').show()
                 displayMovies();
-                $('.popcorn').remove();
             });
         }
         updateKeywords();
     }
 }
 function loop() {
+	cur_time = (new Date()).getTime();
+	var dt = cur_time - last_time,
+	    ratio = mspf / dt;
 	count++;
 	// console.log(waitTime, count);
 	//logic to make a particle or not
 	if(count>=waitTime && listCount<popArr.length){
 		x = popArr[listCount][3]["x"];
 		keyword = popArr[listCount][1];
-		var elem = '<a data-link="'+popArr[i][1]+'" data-weight="'+popArr[i][2]+'" data-name="'+popArr[i][0]+'" id="'+keyword+'_link" class="keyword_item"><div id="'+keyword+'" class="popcorn" style="left:'+x+'px;"><h3>'+popArr[i][0]+'</h3></div></a>';
+		var elem = '<a data-link="'+popArr[i][1]+'" data-weight="'+popArr[i][2]+'" data-name="'+popArr[i][0]+'" class="keyword_item"><div id="'+keyword+'" class="popcorn" style="left:'+x+'px;"><h3>'+popArr[i][0]+'</h3></div></a>';
 		//need to create handler for clicks
 		$('body').append(elem);
 		referenceArray.push(keyword);
 		count = 0;
 		listCount++;
 		waitTime = Math.random()*50;
-		var rotation = Math.random()*20-10;
-		// var sizing = Math.max((keyword.length)/20,1);
-		$('#'+keyword+'_link').click(function(){
+		$('.keyword_item').click(function(){
 			$('.popcorn').fadeOut(300);
 			keyword_item_click($(this));
-		}).children().css('transform','rotate('+rotation+'deg)');
+		})
 	}
 	for(i=0; i<listCount; i++){
 		x = popArr[i][3]["x"];
@@ -74,8 +77,8 @@ function loop() {
 		//update those vals
 		popArr[i][3]["x"]=x+xvel;
 		popArr[i][3]["y"]=y+yvel;
-		popArr[i][3]["yvel"]=yvel+.05;
-		popArr[i][3]["xvel"]*=.995;
+		popArr[i][3]["yvel"]=yvel+.05*ratio;
+		popArr[i][3]["xvel"]*=.995*ratio;
 		if(Math.abs(popArr[i][3]["xvel"])<=.1){
 			popArr[i][3]["xvel"] = 0
 		}
@@ -120,6 +123,7 @@ function loop() {
 		// }
 		// console.log(popArr[i][0])
 	}
+	last_time = cur_time;
 	requestAnimationFrame(loop);
 }
 
@@ -138,9 +142,7 @@ function changePopcorns(data) {
         // $('#links_here').append(a);
     // }
     $('.keyword_item').click(function(){
-    	$('.popcorn').fadeOut(300);
         keyword_item_click($(this));
-        $('.popcorn').remove();
     });
     $('.loading').hide()
     init();
@@ -155,11 +157,7 @@ function updateKeywords() {
         } else {
             changePopcorns(data);
         }
-    });
-    console.log(document.domain);
-    var domain = document.domain.indexOf('localhost') < 0 ? document.domain : document.domain+':8080';
-    console.log(domain);
-    window.history.pushState({},"", 'http://'+domain+'/movies/'+keywords+'/')
+    })
 }
 
 function displayMovies() {
@@ -172,9 +170,6 @@ function displayMovies() {
     $('.screen').slideDown(1000);
     // $('.popcorn').fadeOut(200, function(){
 	$('.popcorn').remove();
-	popArr = [];
-	referenceArray = [];
-	count = 0;
     // });
     $('#carouselHere').load(url, function(responseText, textStatus, XMLHttpRequest){
         console.log('carousel loaded');
@@ -194,22 +189,3 @@ function findYoutubeVideo(movieTitle){
         $('body').append(getYoutubeURL(data));
     })
 }
-
-function disableSelection(target){
-
-    if (typeof target.onselectstart!="undefined") //IE route
-        target.onselectstart=function(){return false}
-
-    else if (typeof target.style.MozUserSelect!="undefined") //Firefox route
-        target.style.MozUserSelect="none"
-
-    else //All other route (ie: Opera)
-        target.onmousedown=function(){return false}
-
-    target.style.cursor = "default"
-}
-
-
-
-//Sample usages
-disableSelection(document.body) //Disable text selection on entire body
