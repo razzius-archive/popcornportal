@@ -56,7 +56,7 @@ function loop() {
 		referenceArray.push(keyword);
 		count = 0;
 		listCount++;
-		waitTime = Math.random()*50;
+		waitTime = Math.random()*60;
 		$('.keyword_item').click(function(){
 			$('.popcorn').fadeOut(300);
 			keyword_item_click($(this));
